@@ -4,24 +4,29 @@
 #include <widgets/Button.h>
 #include <fonts/adwaita_mono_15.h>
 
-class Home {
+#include "PlayerSetup.h"
+
+class Home : public Page {
 public:
-    static void show() {
-        if (!_created) {
-            btnStart.setMargin(76, 76, 105, 105);
-            btnConfigure.setMargin(70, 70, 103, 103);
+    void show() override {
+        if (this->_dirty) {
+            if (!_created) {
+                btnStart.setMargin(76, 76, 105, 105);
+                btnConfigure.setMargin(70, 70, 103, 103);
 
-            btnStart.setOnClick([] {homeButton(1);});
-            btnConfigure.setOnClick([] {homeButton(2);});
+                btnStart.setOnClick([] {homeButton(1);});
+                btnConfigure.setOnClick([] {homeButton(2);});
 
-            _created = true;
+                _created = true;
+            }
+
+            ST7796S::addWidget(btnStart);
+            ST7796S::addWidget(btnConfigure);
         }
-
-        ST7796S::addWidget(btnStart);
-        ST7796S::addWidget(btnConfigure);
+        this->_dirty = false;
     }
 
-    static void hide() {
+    void hide() override {
         ST7796S::removeWidget(btnStart);
         ST7796S::removeWidget(btnConfigure);
     }
@@ -34,11 +39,10 @@ private:
     static void homeButton(const uint8_t btnNb) {
         switch (btnNb) {
             case 1:
-                hide();
-                GameState::start();
+                ST7796S::setPage(new PlayerSetup);
                 break;
             case 2:
-                hide();
+                ST7796S::setPage(nullptr);
                 break;
             default: ;
         }

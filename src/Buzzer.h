@@ -7,8 +7,12 @@ typedef void BuzzerPushedCallback(void *buzzer);
 
 class Buzzer {
 public:
-    static void add(const uint8_t gpio, const uint8_t led_gpio, BuzzerPushedCallback *cb) {
-        _buzzers.push_back(Buzzer(gpio, led_gpio, cb));
+    static uint8_t add(const uint8_t gpio, const uint8_t led_gpio, BuzzerPushedCallback *cb) {
+        auto buzz = Buzzer(gpio, led_gpio, cb);
+        const uint8_t id = buzz.id();
+        _buzzers.push_back(buzz);
+
+        return id;
     }
 
     static void enableAll() {
@@ -64,7 +68,7 @@ private:
     Buzzer(const uint8_t gpio, const uint8_t led_gpio, BuzzerPushedCallback *cb): _enabled(false), _led_gpio(led_gpio), _buzzer_id(_buzzers.size() + 1), _score(0) {
         pinMode(gpio, INPUT_PULLUP);
         pinMode(led_gpio, OUTPUT);
-        /*digitalWrite(led_gpio, LOW);*/
+        digitalWrite(_led_gpio, HIGH);
         attachInterruptParam(digitalPinToInterrupt(gpio), cb, FALLING, this);
     }
 

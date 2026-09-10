@@ -5,9 +5,11 @@
 #include <XPT2046_Touchscreen.h>
 #include <vector>
 #include <algorithm>
+#include <string>
 
 #include "fonts/fonts.h"
 #include "widgets/Widget.h"
+#include "widgets/Page.h"
 #include "fonts/types.h"
 #include "fonts/fonts.h"
 
@@ -36,6 +38,7 @@
 #define CLEAR_COLOR BLACK
 
 class Widget;
+class Page;
 
 class ST7796S {
 public:
@@ -47,10 +50,11 @@ public:
     static void clear();
     static void _drawFilledRectangle(rect_t rect, color_t color);
     static void _drawRectangle(rect_t rect, uint16_t thickness, color_t color);
-    static void _drawString(const char *text, const font_t *font, rect_t rect, color_t color, color_t bgColor);
+    static void _drawString(const std::string &text, const font_t *font, rect_t rect, color_t color, color_t bgColor);
     static void addWidget(Widget& widget);
     static void removeWidget(Widget& widget);
     static void update();
+    static void setPage(Page *page);
 
 private:
     inline static SPIClassRP2040 *_spi;

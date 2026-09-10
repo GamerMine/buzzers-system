@@ -44,7 +44,7 @@ void setup1() {
     ST7796S::begin(&SPI1, LCD_SPI_CS_GPIO, LCD_DC_GPIO, LCD_RESET_GPIO, TOUCH_SPI_CS_GPIO, TOUCH_IRQ_GPIO);
     ST7796S::clear();
 
-    Home::show();
+    ST7796S::setPage(new Home);
 }
 
 void loop() {

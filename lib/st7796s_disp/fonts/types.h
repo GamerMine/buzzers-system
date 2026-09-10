@@ -10,8 +10,8 @@ typedef struct {
 } color_t;
 
 typedef struct {
-    uint16_t x;
-    uint16_t y;
+    int x;
+    int y;
 } vector2_t;
 
 typedef struct {
@@ -23,8 +23,14 @@ inline rect_t rect_from_vector2(const vector2_t v1, const vector2_t v2) {
     return {v1.x, v1.y, v2.x, v2.y};
 }
 
+/*
+inline rect_t rect_sum(const rect_t &r1, const rect_t &r2) {
+    return {r1.start.x + r2.start.x, r1.start.y + r2.start.y, r1.end.x + r2.end.x, r1.end.y + r2.end.y};
+}
+*/
+
 inline vector2_t vector2_sum(const vector2_t v1, const vector2_t v2) {
-    return {static_cast<uint16_t>(v1.x + v2.x), static_cast<uint16_t>(v1.y + v2.y)};
+    return {v1.x + v2.x, v1.y + v2.y};
 }
 
 #endif //BUZZERS_TYPES_H

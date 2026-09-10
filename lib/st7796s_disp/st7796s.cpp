@@ -1,6 +1,9 @@
 #include "st7796s.h"
 
+#include <utility>
+
 static auto widgets = std::vector<Widget*>();
+static Page *currentPage;
 
 void ST7796S::begin(SPIClassRP2040 *spi, const uint8_t lcd_cs, const uint8_t lcd_dc, const uint8_t lcd_reset, const uint8_t touch_cs, const uint8_t touch_irq) {
     _spi = spi;
@@ -108,8 +111,8 @@ void ST7796S::_drawRectangle(const rect_t rect, const uint16_t thickness, const 
     }, color);
 }
 
-void ST7796S::_drawString(const char *text, const font_t *font, const rect_t rect, const color_t color, const color_t bgColor) {
-    const size_t textLen = strlen(text);
+void ST7796S::_drawString(const std::string &text, const font_t *font, const rect_t rect, const color_t color, const color_t bgColor) {
+    const size_t textLen = text.size();
     const uint16_t width = rect.end.x - rect.start.x;
     color_t rowBuffer[width];
 
@@ -173,6 +176,7 @@ void ST7796S::update() {
             widget->draw();
         }
     }
+    if (currentPage != nullptr) currentPage->show();
 
     // Input handling
     const bool touched = _ts->touched();
@@ -186,6 +190,15 @@ void ST7796S::update() {
     }
 
     wasTouched = touched;
+
+    // Update pages
+    if (currentPage != nullptr) currentPage->update();
+}
+
+void ST7796S::setPage(Page *page) {
+    if (currentPage != nullptr) currentPage->hide();
+    currentPage = page;
+    if (page != nullptr) page->markDirty();
 }
 
 void ST7796S::_writeCommand(const uint8_t reg, uint8_t *data, const size_t len) {

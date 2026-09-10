@@ -11,9 +11,7 @@
 class GameState {
 public:
     static void init(BackgroundAudioWAV *wav) {
-        // TODO: Add 
-        Buzzer::add(BUZZER1_GPIO, BUZZER1_LED_GPIO, buzzer_pushed);
-        Buzzer::add(BUZZER2_GPIO, BUZZER2_LED_GPIO, buzzer_pushed);
+
 
         _wav = wav;
     }

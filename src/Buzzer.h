@@ -7,8 +7,8 @@ typedef void BuzzerPushedCallback(void *buzzer);
 
 class Buzzer {
 public:
-    static uint8_t add(const uint8_t gpio, const uint8_t led_gpio, BuzzerPushedCallback *cb) {
-        auto buzz = Buzzer(gpio, led_gpio, cb);
+    static uint8_t add(const uint8_t gpio, const uint8_t led_gpio) {
+        const auto buzz = Buzzer(gpio, led_gpio);
         const uint8_t id = buzz.id();
         _buzzers.push_back(buzz);
 
@@ -65,11 +65,11 @@ public:
     void incrementScore() { _score++; }
 
 private:
-    Buzzer(const uint8_t gpio, const uint8_t led_gpio, BuzzerPushedCallback *cb): _enabled(false), _led_gpio(led_gpio), _buzzer_id(_buzzers.size() + 1), _score(0) {
+    Buzzer(const uint8_t gpio, const uint8_t led_gpio): _enabled(false), _led_gpio(led_gpio), _buzzer_id(_buzzers.size() + 1), _score(0) {
         pinMode(gpio, INPUT_PULLUP);
         pinMode(led_gpio, OUTPUT);
         digitalWrite(_led_gpio, HIGH);
-        attachInterruptParam(digitalPinToInterrupt(gpio), cb, FALLING, this);
+        /*attachInterruptParam(digitalPinToInterrupt(gpio), cb, FALLING, this);*/
     }
 
     inline static std::vector<Buzzer> _buzzers;
